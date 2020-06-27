@@ -1,0 +1,102 @@
+name: "master"
+
+on:
+  push:
+    branches:
+      - master
+      - feature/*
+  pull_request:
+    branches:
+      - master
+      - feature/*
+
+jobs:
+  job_windows:
+    name: "Build for Windows"
+    runs-on: 'windows-latest'
+    steps:
+      - name: "Git Clone"
+        uses: "actions/checkout@v2"
+      - name: "Setup Visual Studio env"
+        uses: "ilammy/msvc-dev-cmd@v1"
+      - name: "Setup GraalVM"
+        uses: "DeLaGuardo/setup-graalvm@3"
+        with:
+          graalvm-version: "20.1.0.java11"
+      - name: "Setup Native Image"
+        shell: cmd
+        run: |
+          gu install native-image
+      - name: "Gradle build"
+        shell: cmd
+        run: |
+          gradlew.bat jar
+      - name: "Native Image"
+        shell: cmd
+        run: |
+          native-image -H:Name=foldershow -jar "build\libs\foldershow-1.0-SNAPSHOT.jar"
+      - name: "Upload Windows build"
+        uses: "actions/upload-artifact@v1"
+        with:
+          name: "windows"
+          path: "foldershow.exe"
+
+  job_mac:
+    name: "Build for Mac"
+    runs-on: 'macos-latest'
+    steps:
+      - name: "Git Clone"
+        uses: "actions/checkout@v2"
+      - name: "Setup Visual Studio env"
+        uses: "ilammy/msvc-dev-cmd@v1"
+      - name: "Setup GraalVM"
+        uses: "DeLaGuardo/setup-graalvm@3"
+        with:
+          graalvm-version: "20.1.0.java11"
+      - name: "Setup Native Image"
+        shell: cmd
+        run: |
+          gu install native-image
+      - name: "Gradle build"
+        shell: cmd
+        run: |
+          gradlew.bat jar
+      - name: "Native Image"
+        shell: cmd
+        run: |
+          native-image -H:Name=foldershow -jar "build/libs/foldershow-1.0-SNAPSHOT.jar"
+      - name: "Upload Mac build"
+        uses: "actions/upload-artifact@v1"
+        with:
+          name: "mac"
+          path: "foldershow"
+
+  job_linux:
+    name: "Build for Linux"
+    runs-on: 'ubuntu-latest'
+    steps:
+      - name: "Git Clone"
+        uses: "actions/checkout@v2"
+      - name: "Setup Visual Studio env"
+        uses: "ilammy/msvc-dev-cmd@v1"
+      - name: "Setup GraalVM"
+        uses: "DeLaGuardo/setup-graalvm@3"
+        with:
+          graalvm-version: "20.1.0.java11"
+      - name: "Setup Native Image"
+        shell: cmd
+        run: |
+          gu install native-image
+      - name: "Gradle build"
+        shell: cmd
+        run: |
+          gradlew.bat jar
+      - name: "Native Image"
+        shell: cmd
+        run: |
+          native-image -H:Name=foldershow -jar "build/libs/foldershow-1.0-SNAPSHOT.jar"
+      - name: "Upload Linux build"
+        uses: "actions/upload-artifact@v1"
+        with:
+          name: "linux"
+          path: "foldershow"
