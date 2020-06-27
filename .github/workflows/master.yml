@@ -47,8 +47,6 @@ jobs:
     steps:
       - name: "Git Clone"
         uses: "actions/checkout@v2"
-      - name: "Setup Visual Studio env"
-        uses: "ilammy/msvc-dev-cmd@v1"
       - name: "Setup GraalVM"
         uses: "DeLaGuardo/setup-graalvm@3"
         with:
@@ -60,7 +58,7 @@ jobs:
       - name: "Gradle build"
         shell: bash
         run: |
-          gradlew.bat jar
+          ./gradlew jar
       - name: "Native Image"
         shell: bash
         run: |
@@ -77,8 +75,6 @@ jobs:
     steps:
       - name: "Git Clone"
         uses: "actions/checkout@v2"
-      - name: "Setup Visual Studio env"
-        uses: "ilammy/msvc-dev-cmd@v1"
       - name: "Setup GraalVM"
         uses: "DeLaGuardo/setup-graalvm@3"
         with:
@@ -90,7 +86,7 @@ jobs:
       - name: "Gradle build"
         shell: bash
         run: |
-          gradlew.bat jar
+          ./gradlew jar
       - name: "Native Image"
         shell: bash
         run: |
