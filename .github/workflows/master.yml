@@ -34,7 +34,7 @@ jobs:
       - name: "Native Image"
         shell: cmd
         run: |
-          native-image -H:Name=foldershow --class-path "build\libs\foldershow-1.0-SNAPSHOT.jar" "info.repy.foldershow.Main"
+          native-image --no-server --no-fallback -H:Name=foldershow --class-path "build\libs\foldershow-1.0-SNAPSHOT.jar" "info.repy.foldershow.Main"
       - name: "Upload Windows build"
         uses: "actions/upload-artifact@v1"
         with:
@@ -62,7 +62,7 @@ jobs:
       - name: "Native Image"
         shell: bash
         run: |
-          native-image -H:Name=foldershow --class-path "build/libs/foldershow-1.0-SNAPSHOT.jar" "info.repy.foldershow.Main"
+          native-image --no-server --no-fallback -H:Name=foldershow --class-path "build/libs/foldershow-1.0-SNAPSHOT.jar" "info.repy.foldershow.Main"
       - name: "Upload Mac build"
         uses: "actions/upload-artifact@v1"
         with:
@@ -90,7 +90,7 @@ jobs:
       - name: "Native Image"
         shell: bash
         run: |
-          native-image -H:Name=foldershow --class-path "build/libs/foldershow-1.0-SNAPSHOT.jar" "info.repy.foldershow.Main"
+          native-image --no-server --no-fallback -H:Name=foldershow --class-path "build/libs/foldershow-1.0-SNAPSHOT.jar" "info.repy.foldershow.Main"
       - name: "Upload Linux build"
         uses: "actions/upload-artifact@v1"
         with:
