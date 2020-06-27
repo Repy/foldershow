@@ -54,15 +54,15 @@ jobs:
         with:
           graalvm-version: "20.1.0.java11"
       - name: "Setup Native Image"
-        shell: cmd
+        shell: bash
         run: |
           gu install native-image
       - name: "Gradle build"
-        shell: cmd
+        shell: bash
         run: |
           gradlew.bat jar
       - name: "Native Image"
-        shell: cmd
+        shell: bash
         run: |
           native-image -H:Name=foldershow -jar "build/libs/foldershow-1.0-SNAPSHOT.jar"
       - name: "Upload Mac build"
@@ -84,15 +84,15 @@ jobs:
         with:
           graalvm-version: "20.1.0.java11"
       - name: "Setup Native Image"
-        shell: cmd
+        shell: bash
         run: |
           gu install native-image
       - name: "Gradle build"
-        shell: cmd
+        shell: bash
         run: |
           gradlew.bat jar
       - name: "Native Image"
-        shell: cmd
+        shell: bash
         run: |
           native-image -H:Name=foldershow -jar "build/libs/foldershow-1.0-SNAPSHOT.jar"
       - name: "Upload Linux build"
