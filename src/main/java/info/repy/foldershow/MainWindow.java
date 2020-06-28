@@ -12,8 +12,9 @@ import java.util.List;
 import java.util.TimerTask;
 
 public class MainWindow {
-    private Frame frame = new Frame();
-    private ImageView view = new ImageView();
+    private int sec;
+    private final Frame frame = new Frame();
+    private final ImageView view = new ImageView();
     private final List<Path> list = new LinkedList<Path>();
     private AsyncBufferedImage next = null;
 
@@ -26,7 +27,8 @@ public class MainWindow {
     }
 
 
-    public MainWindow(List<Path> list) {
+    public MainWindow(int sec, List<Path> list) {
+        this.sec = sec;
         this.list.addAll(list);
         Collections.shuffle(this.list);
         GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
@@ -75,7 +77,7 @@ public class MainWindow {
                 public void run() {
                     next();
                 }
-            }, 1000);
+            }, this.sec * 1000L);
         } catch (IOException e) {
             this.close();
         }

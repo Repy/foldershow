@@ -8,12 +8,14 @@ import java.util.stream.Collectors;
 public class Main {
 
     public static void main(String[] args) {
-        start(args[0]);
+        int sec = Integer.parseInt(args[0]);
+        String dir = args[1];
+        start(sec,dir);
     }
 
-    public static void start(String root) {
+    public static void start(int sec,String root) {
         try {
-            new MainWindow(Files.walk(Paths.get(root)).filter(p -> p.getFileName().toString().toLowerCase().endsWith(".jpg")).collect(Collectors.toList()));
+            new MainWindow(sec,Files.walk(Paths.get(root)).filter(p -> p.getFileName().toString().toLowerCase().endsWith(".jpg")).collect(Collectors.toList()));
         } catch (IOException e) {
             e.printStackTrace();
         }
