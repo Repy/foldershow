@@ -11,9 +11,9 @@ public class ImageView extends Canvas {
     }
 
     @Override
-    public void paint(Graphics g) {
+    public void update(Graphics g) {
         if (this.image != null) {
-            g.drawImage(image, 0, 0, this.getWidth(), this.getHeight(), null);
+            g.drawImage(image, 0, 0, this.getWidth(), this.getHeight(), this);
         }
     }
 }
