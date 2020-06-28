@@ -28,7 +28,9 @@ public class ImageView extends Canvas {
                 imageWidth = imageWidth * viewHeight / imageHeight;
                 imageHeight =viewHeight ; // imageHeight * viewHeight / imageHeight = viewHeight
             }
-
+            if(g instanceof Graphics2D){
+                ((Graphics2D)g).setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+            }
             g.fillRect(0, 0, this.getWidth(), this.getHeight());
             g.drawImage(this.image, (viewWidth-imageWidth)/2, (viewHeight-imageHeight)/2, imageWidth, imageHeight, this);
         }
