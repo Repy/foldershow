@@ -13,7 +13,7 @@ public class Main {
 
     public static void start(String root) {
         try {
-            new MainWindow(Files.walk(Paths.get(root)).filter(p-> p.getFileName().toString().toLowerCase().endsWith(".jpg")).collect(Collectors.toList()));
+            new MainWindow(Files.walk(Paths.get(root)).filter(p -> p.getFileName().toString().toLowerCase().endsWith(".jpg")).collect(Collectors.toList()));
         } catch (IOException e) {
             e.printStackTrace();
         }

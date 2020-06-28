@@ -15,7 +15,8 @@ public class MainWindow {
     Frame frame = new Frame();
     ImageView view = new ImageView();
     private final List<Path> list = new LinkedList<Path>();
-    public  Path rote() {
+
+    public Path rote() {
         Path o = list.remove(0);
         list.add(o);
         return o;
@@ -25,9 +26,9 @@ public class MainWindow {
     public MainWindow(List<Path> list) {
         this.list.addAll(list);
         Collections.shuffle(this.list);
-        frame.setSize(20,50);
+        frame.setSize(20, 50);
         GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-       // device.setFullScreenWindow(frame);
+        device.setFullScreenWindow(frame);
         view.setSize(frame.getWidth() - frame.getInsets().left - frame.getInsets().right, frame.getHeight() - frame.getInsets().top - frame.getInsets().bottom);
         frame.setVisible(true);
         frame.addWindowListener(new WindowAdapter() {
@@ -46,12 +47,12 @@ public class MainWindow {
         next();
     }
 
-    private  final java.util.Timer timer = new java.util.Timer();
+    private final java.util.Timer timer = new java.util.Timer();
 
-    public  void next() {
+    public void next() {
         try {
             Path item = rote();
-            System.out.printf("%s\n",item.toAbsolutePath());
+            System.out.printf("%s\n", item.toAbsolutePath());
             BufferedImage bufferedImage = ImageIO.read(item.toFile());
             showImage(bufferedImage);
             timer.purge();

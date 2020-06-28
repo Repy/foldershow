@@ -17,29 +17,20 @@ jobs:
     steps:
       - name: "Git Clone"
         uses: "actions/checkout@v2"
-      - name: "Setup Visual Studio env"
-        uses: "ilammy/msvc-dev-cmd@v1"
-      - name: "Setup GraalVM"
-        uses: "DeLaGuardo/setup-graalvm@3"
+      - name: "Setup JDK"
+        uses: "actions/setup-java@v1"
         with:
-          graalvm-version: "20.1.0.java11"
-      - name: "Setup Native Image"
+          java-version: "11"
+          architecture: "x64"
+      - name: "Gradle Windows"
         shell: cmd
         run: |
-          gu install native-image
-      - name: "Gradle build"
-        shell: cmd
-        run: |
-          gradlew.bat jar
-      - name: "Native Image"
-        shell: cmd
-        run: |
-          native-image --no-fallback --initialize-at-run-time=info.repy.foldershow,java.awt -H:Name=foldershow --class-path "build\libs\foldershow-1.0-SNAPSHOT.jar" "info.repy.foldershow.Main"
+          gradlew.bat buildWindows
       - name: "Upload Windows build"
         uses: "actions/upload-artifact@v1"
         with:
           name: "windows"
-          path: "foldershow.exe"
+          path: "build/distributions/foldershow.zip"
 
   job_mac:
     name: "Build for Mac"
@@ -47,27 +38,20 @@ jobs:
     steps:
       - name: "Git Clone"
         uses: "actions/checkout@v2"
-      - name: "Setup GraalVM"
-        uses: "DeLaGuardo/setup-graalvm@3"
+      - name: "Setup JDK"
+        uses: "actions/setup-java@v1"
         with:
-          graalvm-version: "20.1.0.java11"
-      - name: "Setup Native Image"
-        shell: bash
+          java-version: "11"
+          architecture: "x64"
+      - name: "Gradle Mac"
         run: |
-          gu install native-image
-      - name: "Gradle build"
-        shell: bash
-        run: |
-          ./gradlew jar
-      - name: "Native Image"
-        shell: bash
-        run: |
-          native-image --no-server --no-fallback -H:Name=foldershow --class-path "build/libs/foldershow-1.0-SNAPSHOT.jar" "info.repy.foldershow.Main"
+          chmod +x ./gradlew
+          ./gradlew buildMac
       - name: "Upload Mac build"
         uses: "actions/upload-artifact@v1"
         with:
           name: "mac"
-          path: "foldershow"
+          path: "build/distributions/foldershow.tar.gz"
 
   job_linux:
     name: "Build for Linux"
@@ -75,24 +59,109 @@ jobs:
     steps:
       - name: "Git Clone"
         uses: "actions/checkout@v2"
-      - name: "Setup GraalVM"
-        uses: "DeLaGuardo/setup-graalvm@3"
+      - name: "Setup JDK"
+        uses: "actions/setup-java@v1"
         with:
-          graalvm-version: "20.1.0.java11"
-      - name: "Setup Native Image"
-        shell: bash
+          java-version: "11"
+          architecture: "x64"
+      - name: "Gradle Linux"
         run: |
-          gu install native-image
-      - name: "Gradle build"
-        shell: bash
-        run: |
-          ./gradlew jar
-      - name: "Native Image"
-        shell: bash
-        run: |
-          native-image --no-server --no-fallback -H:Name=foldershow --class-path "build/libs/foldershow-1.0-SNAPSHOT.jar" "info.repy.foldershow.Main"
+          chmod +x ./gradlew
+          ./gradlew buildLinux
       - name: "Upload Linux build"
         uses: "actions/upload-artifact@v1"
         with:
           name: "linux"
-          path: "foldershow"
+          path: "build/distributions/foldershow.tar.gz"
+
+
+
+## native-imageできるようになったら復活
+
+#  job_windows:
+#    name: "Build for Windows"
+#    runs-on: 'windows-latest'
+#    steps:
+#      - name: "Git Clone"
+#        uses: "actions/checkout@v2"
+#      - name: "Setup Visual Studio env"
+#        uses: "ilammy/msvc-dev-cmd@v1"
+#      - name: "Setup GraalVM"
+#        uses: "DeLaGuardo/setup-graalvm@3"
+#        with:
+#          graalvm-version: "20.1.0.java11"
+#      - name: "Setup Native Image"
+#        shell: cmd
+#        run: |
+#          gu install native-image
+#      - name: "Gradle build"
+#        shell: cmd
+#        run: |
+#          gradlew.bat jar
+#      - name: "Native Image"
+#        shell: cmd
+#        run: |
+#          native-image --no-fallback --initialize-at-run-time=info.repy.foldershow,java.awt -H:Name=foldershow --class-path "build\libs\foldershow-1.0-SNAPSHOT.jar" "info.repy.foldershow.Main"
+#      - name: "Upload Windows build"
+#        uses: "actions/upload-artifact@v1"
+#        with:
+#          name: "windows"
+#          path: "foldershow.exe"
+#
+#  job_mac:
+#    name: "Build for Mac"
+#    runs-on: 'macos-latest'
+#    steps:
+#      - name: "Git Clone"
+#        uses: "actions/checkout@v2"
+#      - name: "Setup GraalVM"
+#        uses: "DeLaGuardo/setup-graalvm@3"
+#        with:
+#          graalvm-version: "20.1.0.java11"
+#      - name: "Setup Native Image"
+#        shell: bash
+#        run: |
+#          gu install native-image
+#      - name: "Gradle build"
+#        shell: bash
+#        run: |
+#          chmod 755 ./gradlew
+#          ./gradlew jar
+#      - name: "Native Image"
+#        shell: bash
+#        run: |
+#          native-image --no-server --no-fallback -H:Name=foldershow --class-path "build/libs/foldershow-1.0-SNAPSHOT.jar" "info.repy.foldershow.Main"
+#      - name: "Upload Mac build"
+#        uses: "actions/upload-artifact@v1"
+#        with:
+#          name: "mac"
+#          path: "foldershow"
+#
+#  job_linux:
+#    name: "Build for Linux"
+#    runs-on: 'ubuntu-latest'
+#    steps:
+#      - name: "Git Clone"
+#        uses: "actions/checkout@v2"
+#      - name: "Setup GraalVM"
+#        uses: "DeLaGuardo/setup-graalvm@3"
+#        with:
+#          graalvm-version: "20.1.0.java11"
+#      - name: "Setup Native Image"
+#        shell: bash
+#        run: |
+#          gu install native-image
+#      - name: "Gradle build"
+#        shell: bash
+#        run: |
+#          chmod 755 ./gradlew
+#          ./gradlew jar
+#      - name: "Native Image"
+#        shell: bash
+#        run: |
+#          native-image --no-server --no-fallback -H:Name=foldershow --class-path "build/libs/foldershow-1.0-SNAPSHOT.jar" "info.repy.foldershow.Main"
+#      - name: "Upload Linux build"
+#        uses: "actions/upload-artifact@v1"
+#        with:
+#          name: "linux"
+#          path: "foldershow"
