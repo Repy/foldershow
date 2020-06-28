@@ -31,6 +31,7 @@ public class MainWindow {
         this.sec = sec;
         this.list.addAll(list);
         Collections.shuffle(this.list);
+        frame.setUndecorated(true);
         frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowOpened(WindowEvent e) {
