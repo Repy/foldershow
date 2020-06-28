@@ -7,16 +7,23 @@ plugins {
 group 'info.repy.foldershow'
 version '1.0-SNAPSHOT'
 
-sourceCompatibility = 1.11
-targetCompatibility = 1.11
-mainClassName = "info.repy.foldershow/info.repy.foldershow.Main"
-
-repositories {
-    mavenCentral()
+java{
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
 }
 
-compileJava.options.encoding = 'UTF-8'
-compileTestJava.options.encoding = 'UTF-8'
+application {
+    mainModule = 'info.repy.foldershow'
+    mainClass = 'info.repy.foldershow.Main'
+}
+
+compileJava{
+    options.encoding = 'UTF-8'
+}
+
+compileTestJava{
+    options.encoding = 'UTF-8'
+}
 
 jlink {
     // zipの"image/lib/modules"内にJDKとOpenJFXとアプリが合体して保存される
@@ -24,6 +31,10 @@ jlink {
     launcher {
         name = 'foldershow'
     }
+}
+
+repositories {
+    mavenCentral()
 }
 
 dependencies {

@@ -12,24 +12,25 @@ import java.util.List;
 import java.util.TimerTask;
 
 public class MainWindow {
-    Frame frame = new Frame();
-    ImageView view = new ImageView();
+    private Frame frame = new Frame();
+    private ImageView view = new ImageView();
     private final List<Path> list = new LinkedList<Path>();
+    private AsyncBufferedImage next = null;
 
-    public Path rote() {
+    public AsyncBufferedImage rote() throws IOException {
+        AsyncBufferedImage now = next;
         Path o = list.remove(0);
         list.add(o);
-        return o;
+        next = new AsyncBufferedImage(o);
+        return now;
     }
 
 
     public MainWindow(List<Path> list) {
         this.list.addAll(list);
         Collections.shuffle(this.list);
-        frame.setSize(20, 50);
         GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
         device.setFullScreenWindow(frame);
-        view.setSize(frame.getWidth() - frame.getInsets().left - frame.getInsets().right, frame.getHeight() - frame.getInsets().top - frame.getInsets().bottom);
         frame.setVisible(true);
         frame.addWindowListener(new WindowAdapter() {
             @Override
@@ -38,6 +39,12 @@ public class MainWindow {
             }
         });
         frame.add(view);
+        frame.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                resize();
+            }
+        });
         view.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -45,15 +52,22 @@ public class MainWindow {
             }
         });
         next();
+        resize();
     }
 
     private final java.util.Timer timer = new java.util.Timer();
 
     public void next() {
         try {
-            Path item = rote();
-            System.out.printf("%s\n", item.toAbsolutePath());
-            BufferedImage bufferedImage = ImageIO.read(item.toFile());
+            BufferedImage bufferedImage = null;
+            for (int i = 0; i < 5; i++) {
+                AsyncBufferedImage asyncBufferedImage = rote();
+                if (asyncBufferedImage == null) continue;
+                bufferedImage = asyncBufferedImage.get();
+                if (bufferedImage == null) continue;
+                break;
+            }
+            if (bufferedImage == null) throw new RuntimeException();
             showImage(bufferedImage);
             timer.purge();
             timer.schedule(new TimerTask() {
@@ -71,6 +85,10 @@ public class MainWindow {
     private void showImage(java.awt.image.BufferedImage image) {
         view.showImage(image);
         view.repaint();
+    }
+
+    public void resize() {
+        view.setSize(frame.getWidth() - frame.getInsets().left - frame.getInsets().right, frame.getHeight() - frame.getInsets().top - frame.getInsets().bottom);
     }
 
     public void close() {
