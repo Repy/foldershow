@@ -31,20 +31,29 @@ public class MainWindow {
         this.sec = sec;
         this.list.addAll(list);
         Collections.shuffle(this.list);
-        GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-        device.setFullScreenWindow(frame);
-        frame.setVisible(true);
         frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowOpened(WindowEvent e) {
+                GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+                device.setFullScreenWindow(frame);
+                frame.add(view);
+                MainWindow.this.next();
+            }
+
+            @Override
+            public void windowStateChanged(WindowEvent e) {
+                MainWindow.this.resize();
+            }
+
             @Override
             public void windowClosing(WindowEvent e) {
                 MainWindow.this.close();
             }
         });
-        frame.add(view);
         frame.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
-                resize();
+                MainWindow.this.resize();
             }
         });
         view.addMouseListener(new MouseAdapter() {
@@ -53,8 +62,7 @@ public class MainWindow {
                 MainWindow.this.close();
             }
         });
-        next();
-        resize();
+        frame.setVisible(true);
     }
 
     private final java.util.Timer timer = new java.util.Timer();
