@@ -22,7 +22,7 @@ public class MainWindow {
         AsyncBufferedImage now = next;
         Path o = list.remove(0);
         list.add(o);
-        next = new AsyncBufferedImage(o);
+        next = new AsyncBufferedImage(o,view.getWidth(),view.getHeight());
         return now;
     }
 
@@ -31,21 +31,16 @@ public class MainWindow {
         this.sec = sec;
         this.list.addAll(list);
         Collections.shuffle(this.list);
-        frame.setUndecorated(true);
         frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowOpened(WindowEvent e) {
-                GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-                device.setFullScreenWindow(frame);
-                frame.add(view);
-                MainWindow.this.next();
+                java.awt.EventQueue.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        MainWindow.this.next();
+                    }
+                });
             }
-
-            @Override
-            public void windowStateChanged(WindowEvent e) {
-                MainWindow.this.resize();
-            }
-
             @Override
             public void windowClosing(WindowEvent e) {
                 MainWindow.this.close();
@@ -63,6 +58,10 @@ public class MainWindow {
                 MainWindow.this.close();
             }
         });
+        frame.setUndecorated(true);
+        GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+        device.setFullScreenWindow(frame);
+        frame.add(view);
         frame.setVisible(true);
     }
 
@@ -79,7 +78,8 @@ public class MainWindow {
                 break;
             }
             if (bufferedImage == null) throw new RuntimeException();
-            showImage(bufferedImage);
+            view.showImage(bufferedImage);
+            view.repaint();
             timer.purge();
             timer.schedule(new TimerTask() {
                 @Override
@@ -93,13 +93,8 @@ public class MainWindow {
 
     }
 
-    private void showImage(java.awt.image.BufferedImage image) {
-        view.showImage(image);
-        view.repaint();
-    }
-
     public void resize() {
-        view.setSize(frame.getWidth() - frame.getInsets().left - frame.getInsets().right, frame.getHeight() - frame.getInsets().top - frame.getInsets().bottom);
+        view.setBounds(0,0,frame.getWidth() - frame.getInsets().left - frame.getInsets().right, frame.getHeight() - frame.getInsets().top - frame.getInsets().bottom);
     }
 
     public void close() {
