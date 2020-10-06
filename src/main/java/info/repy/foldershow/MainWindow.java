@@ -1,6 +1,5 @@
 package info.repy.foldershow;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -22,7 +21,7 @@ public class MainWindow {
         AsyncBufferedImage now = next;
         Path o = list.remove(0);
         list.add(o);
-        next = new AsyncBufferedImage(o,view.getWidth(),view.getHeight());
+        next = new AsyncBufferedImage(o, view.getWidth(), view.getHeight());
         return now;
     }
 
@@ -37,10 +36,12 @@ public class MainWindow {
                 java.awt.EventQueue.invokeLater(new Runnable() {
                     @Override
                     public void run() {
+                        MainWindow.this.resize();
                         MainWindow.this.next();
                     }
                 });
             }
+
             @Override
             public void windowClosing(WindowEvent e) {
                 MainWindow.this.close();
@@ -58,10 +59,13 @@ public class MainWindow {
                 MainWindow.this.close();
             }
         });
-        frame.setUndecorated(true);
-        GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-        device.setFullScreenWindow(frame);
         frame.add(view);
+        frame.setSize(600, 300);
+        if (true) {
+            frame.setUndecorated(true);
+            GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+            device.setFullScreenWindow(frame);
+        }
         frame.setVisible(true);
     }
 
@@ -94,7 +98,7 @@ public class MainWindow {
     }
 
     public void resize() {
-        view.setBounds(0,0,frame.getWidth() - frame.getInsets().left - frame.getInsets().right, frame.getHeight() - frame.getInsets().top - frame.getInsets().bottom);
+        view.setBounds(0, 0, frame.getWidth() - frame.getInsets().left - frame.getInsets().right, frame.getHeight() - frame.getInsets().top - frame.getInsets().bottom);
     }
 
     public void close() {
