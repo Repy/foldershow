@@ -5,10 +5,10 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleExecutable</key>
-	<string>TOTPClient.sh</string>
+	<string>foldershow.sh</string>
 	<key>CFBundleIconFile</key>
 	<string>icon.icns</string>
 	<key>CFBundleIdentifier</key>
-	<string>info.repy.totp</string>
+	<string>info.repy.foldershow</string>
 </dict>
 </plist>
