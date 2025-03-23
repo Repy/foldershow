@@ -21,7 +21,6 @@ compileJava{
 }
 
 jlink {
-    // zipの"image/lib/modules"内にJDKとOpenJFXとアプリが合体して保存される
     options = ['--strip-debug', '--no-header-files', '--no-man-pages', '--add-modules', 'java.base']
     launcher {
         name = 'foldershow'
