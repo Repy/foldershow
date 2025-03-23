@@ -1,5 +1,6 @@
 package info.repy.foldershow;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -11,8 +12,8 @@ import java.util.List;
 import java.util.TimerTask;
 
 public class MainWindow {
-    private int sec;
-    private final Frame frame = new Frame();
+    private final int sec;
+    private final JFrame frame = new JFrame();
     private final ImageView view = new ImageView();
     private final List<Path> list = new LinkedList<Path>();
     private AsyncBufferedImage next = null;

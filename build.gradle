@@ -1,15 +1,14 @@
 plugins {
     id 'application'
-    id 'org.beryx.jlink' version '2.18.0'
-    // JDKのみにしたい場合は"org.beryx.runtime"を使う
+    id 'org.beryx.jlink' version '3.1.1'
 }
 
 group 'info.repy.foldershow'
 version '1.0-SNAPSHOT'
 
 java{
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
 
 application {
@@ -21,13 +20,9 @@ compileJava{
     options.encoding = 'UTF-8'
 }
 
-compileTestJava{
-    options.encoding = 'UTF-8'
-}
-
 jlink {
     // zipの"image/lib/modules"内にJDKとOpenJFXとアプリが合体して保存される
-    options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages', '--add-modules', 'java.base']
+    options = ['--strip-debug', '--no-header-files', '--no-man-pages', '--add-modules', 'java.base']
     launcher {
         name = 'foldershow'
     }
@@ -38,11 +33,10 @@ repositories {
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
 task buildWindows(type: Zip, dependsOn: tasks.jlink) {
-    archiveName = "foldershow.zip"
+    archiveFileName = "foldershow.zip"
     into("image") {
         from fileTree(tasks.jlink.imageDir)
     }
@@ -51,7 +45,7 @@ task buildWindows(type: Zip, dependsOn: tasks.jlink) {
 
 task buildMac(type: Tar, dependsOn: tasks.jlink) {
     compression = Compression.GZIP
-    archiveName = "foldershow.tar.gz"
+    archiveFileName = "foldershow.tar.gz"
     into("TOTPClient.app"){
         from fileTree("scripts/mac")
         into("Contents/MacOS/image"){
@@ -62,7 +56,7 @@ task buildMac(type: Tar, dependsOn: tasks.jlink) {
 
 task buildLinux(type: Tar, dependsOn: tasks.jlink) {
     compression = Compression.GZIP
-    archiveName = "foldershow.tar.gz"
+    archiveFileName = "foldershow.tar.gz"
     into("image") {
         from fileTree(tasks.jlink.imageDir)
     }
