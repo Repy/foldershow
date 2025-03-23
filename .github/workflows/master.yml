@@ -24,14 +24,14 @@ jobs:
       - name: "Setup JDK"
         uses: "actions/setup-java@v1"
         with:
-          java-version: "11"
+          java-version: "21"
           architecture: "x64"
       - name: "Gradle Windows"
         shell: cmd
         run: |
           gradlew.bat buildWindows
       - name: "Upload Windows build"
-        uses: "actions/upload-artifact@v1"
+        uses: "actions/upload-artifact@v4"
         with:
           name: "windows"
           path: "build/distributions/foldershow.zip"
@@ -45,14 +45,14 @@ jobs:
       - name: "Setup JDK"
         uses: "actions/setup-java@v1"
         with:
-          java-version: "11"
+          java-version: "21"
           architecture: "x64"
       - name: "Gradle Mac"
         run: |
           chmod +x ./gradlew
           ./gradlew buildMac
       - name: "Upload Mac build"
-        uses: "actions/upload-artifact@v1"
+        uses: "actions/upload-artifact@v4"
         with:
           name: "mac"
           path: "build/distributions/foldershow.tar.gz"
@@ -66,14 +66,14 @@ jobs:
       - name: "Setup JDK"
         uses: "actions/setup-java@v1"
         with:
-          java-version: "11"
+          java-version: "21"
           architecture: "x64"
       - name: "Gradle Linux"
         run: |
           chmod +x ./gradlew
           ./gradlew buildLinux
       - name: "Upload Linux build"
-        uses: "actions/upload-artifact@v1"
+        uses: "actions/upload-artifact@v4"
         with:
           name: "linux"
           path: "build/distributions/foldershow.tar.gz"
@@ -88,44 +88,13 @@ jobs:
     if: "contains(github.ref, 'tags/')"
     steps:
       - name: "Download all build"
-        uses: "actions/download-artifact@v2"
+        uses: "actions/download-artifact@v4"
         with:
           path: "build"
-      - name: "Create Release"
-        id: "create_release"
-        uses: "actions/create-release@v1"
-        env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Release
+        uses: softprops/action-gh-release@v1
         with:
-          tag_name: "${{ github.ref }}"
-          release_name: "Release ${{ github.ref }}"
-          body: ""
-          draft: false
-          prerelease: false
-      - name: "Release Windows build"
-        uses: "actions/upload-release-asset@v1"
-        env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-        with:
-          upload_url: "${{ steps.create_release.outputs.upload_url }}"
-          asset_path: "build/windows/foldershow.zip"
-          asset_name: "windows.zip"
-          asset_content_type: "application/zip"
-      - name: "Release Mac build"
-        uses: "actions/upload-release-asset@v1"
-        env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-        with:
-          upload_url: "${{ steps.create_release.outputs.upload_url }}"
-          asset_path: "build/mac/foldershow.tar.gz"
-          asset_name: "mac.zip"
-          asset_content_type: "application/zip"
-      - name: "Release Linux build"
-        uses: "actions/upload-release-asset@v1"
-        env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-        with:
-          upload_url: "${{ steps.create_release.outputs.upload_url }}"
-          asset_path: "build/linux/foldershow.tar.gz"
-          asset_name: "linux.zip"
-          asset_content_type: "application/zip"
+          files: |
+            build/windows/foldershow.zip
+            build/mac/foldershow.tar.gz
+            build/linux/foldershow.tar.gz
